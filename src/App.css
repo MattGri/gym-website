@@ -12,3 +12,14 @@
   height: 900px;
   margin-top: -330px;
 }
+
+.searchButton:hover {
+  color: #ff2625;
+  border: 1px solid #ff2625;
+}
+
+@media (max-width: 1200px) {
+  .heroBanner {
+    display: none;
+  }
+}
