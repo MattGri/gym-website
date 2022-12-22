@@ -1,27 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Stack, Typography, Button, TextField } from '@mui/material';
-import axios from 'axios';
+import HorizontalScroll from './HorizontalScroll';
+import { fetchData, exerciseOptions } from '../utils/fetchData';
 
-const SearchExercises = () => {
+interface SearchExercisesProps {
+  setExercises: any;
+  bodyPart: string;
+  setBodyPart: any;
+}
+
+const SearchExercises = ({
+  setExercises,
+  bodyPart,
+  setBodyPart,
+}: SearchExercisesProps) => {
   const [search, setSearch] = useState('');
 
-  const handleSearch = () => {
-    const options = {
-      method: 'GET',
-      url: 'https://exercisedb.p.rapidapi.com/exercises',
-      headers: {
-        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-        'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-      },
+  const [bodyParts, setBodyParts] = useState<any>([]);
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      const exercisesData = await fetchData(
+        'https://exercisedb.p.rapidapi.com/exercises/bodyPartList',
+        exerciseOptions
+      );
+      setBodyParts(['all', ...exercisesData]);
     };
-    axios
-      .request(options)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+
+    fetchExercises();
+  }, []);
+
+  const handleSearch = async () => {
+    if (search) {
+      const exercisesData = await fetchData(
+        'https://exercisedb.p.rapidapi.com/exercises',
+        exerciseOptions
+      );
+
+      const filteredExercises = exercisesData.filter(
+        (exercise: any) =>
+          exercise.name.toLowerCase().includes(search) ||
+          exercise.bodyPart.toLowerCase().includes(search) ||
+          exercise.equipment.toLowerCase().includes(search)
+      );
+
+      setSearch('');
+      setExercises(filteredExercises);
+    }
   };
 
   return (
@@ -70,6 +95,19 @@ const SearchExercises = () => {
         >
           Search
         </Button>
+      </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          p: '20px',
+        }}
+      >
+        <HorizontalScroll
+          data={bodyParts}
+          bodyPart={bodyPart}
+          setBodyPart={setBodyPart}
+        />
       </Box>
     </Stack>
   );

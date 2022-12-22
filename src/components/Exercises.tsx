@@ -1,6 +1,12 @@
 import React from 'react';
 
-const Exercises = () => {
+interface ExercisesProps {
+  exercises: any;
+  setExercises: any;
+  bodyPart: any;
+}
+
+const Exercises = ({ exercises, setExercises, bodyPart }: ExercisesProps) => {
   return <div>Exercises</div>;
 };
 

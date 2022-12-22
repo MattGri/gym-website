@@ -8,6 +8,8 @@ import ExerciseDetail from './pages/ExerciseDetail';
 import Footer from './components/Footer';
 
 function App() {
+
+
   return (
     <Router>
       <div className="App">
